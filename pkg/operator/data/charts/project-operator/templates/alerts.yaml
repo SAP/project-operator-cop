@@ -1,0 +1,22 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: project-alerts
+  namespace: monitoring
+spec:
+  groups:
+  - name: project-operator-alerts
+    rules:
+    - alert: "ProjectExpired"
+      annotations:
+        summary: "Project {{ "{{" }} $labels.project {{ "}}" }} has not been removed in its lifetime ( remaining ttl: {{ "{{" }} $value | humanizeDuration {{ "}}" }} )"
+        description: "Project {{ "{{" }} $labels.project {{ "}}" }} has not been removed in its lifetime ( {{ "{{" }} $value {{ "}}" }} ). Please check the status of project {{ "{{" }} $labels.project {{ "}}" }}"
+        {{- if .Values.monitoring.runBookUrlPrefix }}
+        runbook_url: "{{ .Values.monitoring.runBookUrlPrefix }}/application-alerts/#alert-name-project-operator-alerts"
+        {{- end }}
+      expr: project_ttl_seconds_remaining < 0 or project_expired > 0
+      for: 10m
+      labels:
+        severity: critical
+{{- end }}

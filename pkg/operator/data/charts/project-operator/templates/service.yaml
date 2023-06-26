@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "project-operator.fullname" . }}
+  labels:
+    {{- include "project-operator.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: webhook-server
+      name: https
+  selector:
+    {{- include "project-operator.selectorLabels" . | nindent 4 }}

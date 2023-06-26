@@ -1,0 +1,18 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  namespace: cs-system
+  name: project-manager-pod-monitor
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: project-manager
+      app.kubernetes.io/name: project-operator
+  podMetricsEndpoints:
+  - port: http
+  namespaceSelector:
+    matchNames:
+    - cs-system
+{{- end }}
