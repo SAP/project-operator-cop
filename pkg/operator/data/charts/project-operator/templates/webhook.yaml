@@ -65,7 +65,7 @@ data:
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: {{ include "project-operator.fullname" . }}-validate
+  name: {{ include "project-operator.fullname" . }}
   labels:
     {{- include "project-operator.labels" . | nindent 4 }}
   {{- if .Values.webhook.certManager.enabled }}
@@ -83,8 +83,8 @@ webhooks:
       name: {{ include "project-operator.fullname" . }}
       namespace: {{ .Release.Namespace }}
       path: /validate-core-cs-sap-com-v1alpha1-project
-  failurePolicy: Fail
-  name: validate-project.core.cs.sap.com
+      port: 443
+  name: validate.projects.core.cs.sap.com
   rules:
   - apiGroups:
     - core.cs.sap.com
@@ -96,6 +96,9 @@ webhooks:
     - DELETE
     resources:
     - projects
+    scope: Cluster
+  matchPolicy: Equivalent
   sideEffects: None
   timeoutSeconds: 10
+  failurePolicy: Fail
 
