@@ -98,10 +98,9 @@ jobs:
         fi
 
         echo "Target version: $version"
-        echo "Target tag: $tag."
+        echo "Target tag: $tag"
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
-        echo
 
     - name: Update chart version and appVersion
       run: |
@@ -110,12 +109,12 @@ jobs:
         target_chart_version=${{ steps.get_target_release.outputs.version }}
         target_app_version=${{ steps.get_target_release.outputs.tag }}
 
-        echo "Updating $CHART_DIRECTORY/Chart.yaml from $current_chart_version to $target_chart_version."
+        echo "Updating $CHART_DIRECTORY/Chart.yaml from $current_chart_version to $target_chart_version ..."
         perl -pi -e "s#^version:.*#version: $target_chart_version#g" $CHART_DIRECTORY/Chart.yaml
         perl -pi -e "s#^appVersion:.*#appVersion: $target_app_version#g" $CHART_DIRECTORY/Chart.yaml
 
         if [ -z "$(git status --porcelain)" ]; then
-          echo "Nothing has changed; skipping commit/push."
+          echo "Nothing has changed; skipping commit/push ..."
         else
           git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
           git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
@@ -128,7 +127,7 @@ jobs:
       id: get_target_commit
       run: |
         sha=$(git rev-parse HEAD)
-        echo "Target commit: $sha."
+        echo "Target commit: $sha"
         echo "sha=$sha" >> $GITHUB_OUTPUT
 
     - name: Create Release
