@@ -73,36 +73,41 @@ jobs:
               exit 1
           esac
           if [ -z "$current_version" ]; then
+            version=${INITIAL_TAG/#$TAG_PREFIX/}
             tag=$INITIAL_TAG
           else
-            tag=$TAG_PREFIX$(semver bump $version_bump $current_version)
+            version=$(semver bump $version_bump $current_version)
+            tag=$TAG_PREFIX$version
           fi
         else
           if [[ $desired_version =~ ^$TAG_PREFIX([0-9].*)$ ]]; then
+            version=${BASH_REMATCH[1]}
             tag=$desired_version
-            desired_version=${BASH_REMATCH[1]}
           else
             >&1 echo "Invalid input: desired-version ($desired_version) should start with $TAG_PREFIX."
             exit 1
           fi
-          if [ "$(semver validate $desired_version)" != valid ]; then
-            >&1 echo "Invalid input: desired-version ($desired_version) is not a valid semantic version."
+          if [ "$(semver validate $version)" != valid ]; then
+            >&1 echo "Invalid input: desired-version ($version) is not a valid semantic version."
             exit 1
           fi
-          if [ "$(semver compare $desired_version $current_version)" -le 0 ]; then
-            >&1 echo "Invalid input: desired-version ($desired_version) should be higher than current version ($current_version)."
+          if [ "$(semver compare $version $current_version)" -le 0 ]; then
+            >&1 echo "Invalid input: desired-version ($version) should be higher than current version ($current_version)."
             exit 1
           fi
         fi
 
+        echo "Target version: $version"
         echo "Target tag: $tag."
+        echo "version=$version" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
+        echo
 
     - name: Update chart version and appVersion
       run: |
         current_chart_version=$(yq .version $CHART_DIRECTORY/Chart.yaml)
         current_app_version=$(yq .appVersion $CHART_DIRECTORY/Chart.yaml)
-        target_chart_version=${{ steps.get_target_release.outputs.tag }}
+        target_chart_version=${{ steps.get_target_release.outputs.version }}
         target_app_version=${{ steps.get_target_release.outputs.tag }}
 
         echo "Updating $CHART_DIRECTORY/Chart.yaml from $current_chart_version to $target_chart_version."
