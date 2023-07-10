@@ -1,6 +1,6 @@
 # project-operator
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.2](https://img.shields.io/badge/AppVersion-v0.1.2-informational?style=flat-square)
 
 A Helm chart for https://github.com/sap/project-operator
 
@@ -15,11 +15,11 @@ A Helm chart for https://github.com/sap/project-operator
 | image.tag | string | `""` | Image tag (defauls to .Chart.AppVersion) |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | imagePullSecrets | list | `[]` | Image pull secrets |
+| nodeSelector | object | `{}` | Node selector |
 | affinity | object | `{}` | Affinity settings |
 | topologySpreadConstraints | list | `[]` | Topology spread constraints (if unspecified, default constraints for hostname and zone will be generated) |
 | defaultHostNameSpreadPolicy | string | `"ScheduleAnyway"` | Default topology spread policy for hostname |
 | defaultZoneSpreadPolicy | string | `"ScheduleAnyway"` | Default topology spread policy for zone |
-| nodeSelector | object | `{}` | Node selector |
 | tolerations | list | `[]` | Tolerations |
 | priorityClassName | string | `""` | Priority class |
 | podSecurityContext | object | `{}` | Pod security context |
@@ -30,6 +30,10 @@ A Helm chart for https://github.com/sap/project-operator
 | resources.limits.cpu | float | `0.1` | CPU limit |
 | resources.requests.memory | string | `"20Mi"` | Memory request |
 | resources.requests.cpu | float | `0.01` | CPU request |
+| webhook.certManager.enabled | bool | `false` | Whether to use cert-manager to manage webhook tls |
+| webhook.certManager.issuerGroup | string | `""` | Issuer group (only relevant if enabled is true; if unset, the default cert-manager group is used) |
+| webhook.certManager.issuerKind | string | `""` | Issuer kind (only relevant if enabled is true; if unset, the default cert-manager type 'Issuer' is used) |
+| webhook.certManager.issuerName | string | `""` | Issuer name (only relevant if enabled is true; if unset, a self-signed issuer is used) |
 | namespacePrefix | string | `""` | Prefix for project namespaces (if empty, the operator default will be used) |
 | adminClusterRole | string | `""` | Cluster role to be granted to admin members on the project namespace (if empty, the operator default will be used) |
 | viewerClusterRole | string | `""` | Cluster role to be granted to viewer members on the project namespace (if empty, the operator default will be used) |
