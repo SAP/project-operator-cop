@@ -131,5 +131,5 @@ jobs:
     - name: Build and push artifact
       run: |
         cd crds
-        repository=${{ github.repository }}/crds
-        tar cvz * | regctl artifact put -m application/gzip $REGISTRY/${repository,,}:${{ github.event.release.tag_name }}
+        repository=$REGISTRY/${{ github.repository }}/crds
+        tar cvz * | regctl artifact put -m application/gzip ${repository,,}:${{ github.event.release.tag_name }}
