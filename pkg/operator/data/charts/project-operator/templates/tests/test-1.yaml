@@ -1,0 +1,36 @@
+{{- $projectName := printf "%s-test-1-%s" (include "project-operator.fullname" .) (randAlphaNum 10 | lower) }}
+---
+apiVersion: core.cs.sap.com/v1alpha1
+kind: Project
+metadata:
+  name: {{ $projectName }}
+  labels:
+    {{- include "project-operator.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "project-operator.fullname" . }}-test-1
+  labels:
+    {{- include "project-operator.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  containers:
+  - name: kubectl
+    image: bitnami/kubectl:{{ .Capabilities.KubeVersion.Version | trimPrefix "v" }}
+    command:
+    - bash
+    - -ec
+    - |
+        kubectl wait projects.core.cs.sap.com/{{ $projectName }} --for condition=Ready --timeout 30s
+        kubectl get namespace project-{{ $projectName }}
+  serviceAccountName: {{ include "project-operator.fullname" . }}-test
+  terminationGracePeriodSeconds: 3
+  restartPolicy: Never
