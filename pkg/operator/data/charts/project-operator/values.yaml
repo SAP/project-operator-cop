@@ -69,5 +69,5 @@ enableClusterView: false
 monitoring:
   # -- Enable montoring (requires prometheus-operator)
   enabled: false
-  # -- Runbook URL prefix
-  runBookUrlPrefix: ""
+  # -- Prometheus operator (record or alert) rules
+  rules: []

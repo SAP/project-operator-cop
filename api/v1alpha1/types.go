@@ -9,6 +9,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 
+	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+
 	"github.com/sap/component-operator-runtime/pkg/component"
 	componentoperatorruntimetypes "github.com/sap/component-operator-runtime/pkg/types"
 )
@@ -22,6 +24,19 @@ type ProjectOperatorSpec struct {
 	// +optional
 	Image                          component.ImageSpec `json:"image"`
 	component.KubernetesProperties `json:",inline"`
+	NamespacePrefix                string          `json:"namespacePrefix,omitempty"`
+	AdminClusterRole               string          `json:"adminClusterRole,omitempty"`
+	ViewerClusterRole              string          `json:"viewerClusterRole,omitempty"`
+	EnableClusterView              bool            `json:"enableClusterView,omitempty"`
+	Monitoring                     *MonitoringSpec `json:"monitoring,omitempty"`
+}
+
+// MonitoringSpec describes observability related properties of the Project.
+type MonitoringSpec struct {
+	// Whether related resources shall be deployed (requires prometheus-operator).
+	Enabled bool `json:"enabled,omitempty"`
+	// Prometheus (record or alert) rules.
+	Rules []monitoringv1.Rule `json:"rules,omitempty"`
 }
 
 // ProjectOperatorStatus defines the observed state of ProjectOperator.
