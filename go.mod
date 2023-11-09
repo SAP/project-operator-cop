@@ -1,10 +1,10 @@
 module github.com/sap/project-operator-cop
 
-go 1.21.3
+go 1.21.4
 
 require (
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.69.0
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.69.1
 	github.com/sap/component-operator-runtime v0.1.16
 	k8s.io/apiextensions-apiserver v0.28.3
 	k8s.io/apimachinery v0.28.3
