@@ -66,8 +66,12 @@ adminClusterRole: ""
 viewerClusterRole: ""
 # -- Automatically grant cluster view privileges to all members of the project
 enableClusterView: false
-monitoring:
-  # -- Enable montoring (requires prometheus-operator)
-  enabled: false
-  # -- Prometheus operator (record or alert) rules
-  rules: []
+metrics:
+  podMonitor:
+    # -- Whether to create a PodMonitor resource
+    enabled: false
+  prometheusRule:
+    # -- Whether to create a PrometheusRule resource
+    enabled: false
+    # -- PrometheusRule rules
+    rules: []
