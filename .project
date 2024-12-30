@@ -10,7 +10,8 @@ kind: ProjectOperator
 kubernetesVersion: v0.27.2
 mutatingWebhookEnabled: false
 operatorName: project-operator-cop.cs.sap.com
-owner: SAP SE
+owner: SAP SE or an SAP affiliate company and project-operator-cop contributors
 resource: projectoperators
+spdxLicenseHeaders: true
 validatingWebhookEnabled: false
 version: v0.1.4
